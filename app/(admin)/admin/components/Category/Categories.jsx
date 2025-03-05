@@ -112,56 +112,60 @@ function Categories() {
   };
 
   return (
-    <div>
-      <h2 className="text-2xl font-semibold mb-4">Manage Categories</h2>
+    <div className="container mx-auto p-8">
+      <h2 className="text-3xl font-bold text-gray-800 mb-6">
+        Manage Categories
+      </h2>
       <button
         onClick={() => openModal("add")}
-        className="bg-blue-500 flex flex-row justify-center items-center gap-2 hover:bg-blue-600 text-white px-4 py-2 rounded-md mb-4"
+        className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 mb-6 transition-all duration-300"
       >
-        <PlusCircle size={16} /> Add New Category
+        <PlusCircle size={18} /> Add New Category
       </button>
 
+      {/* Modal */}
       {modal.isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-md w-96">
-            <h3 className="text-lg font-semibold mb-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg w-96 shadow-2xl transform transition-all duration-300 ease-in-out">
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">
               {modal.type === "add" ? "Add New Category" : "Edit Category"}
             </h3>
-            {error && <p className="text-red-500 mb-2">{error}</p>}
+            {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
             {successMessage && (
-              <p className="text-green-500 mb-2">{successMessage}</p>
+              <p className="text-green-500 text-sm mb-4">{successMessage}</p>
             )}
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Name
               </label>
               <input
                 type="text"
                 value={categoryName}
                 onChange={(e) => setCategoryName(e.target.value)}
-                className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Description
               </label>
               <textarea
                 value={categoryDescription}
                 onChange={(e) => setCategoryDescription(e.target.value)}
-                className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                rows="3"
               />
             </div>
-            <div className="flex justify-end">
+            <div className="flex justify-end gap-2">
               <button
                 onClick={closeModal}
-                className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md mr-2"
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md transition-all duration-300"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSubmit}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-all duration-300"
               >
                 {modal.type === "add" ? "Add" : "Save"}
               </button>
@@ -171,28 +175,38 @@ function Categories() {
       )}
 
       {/* Display categories */}
-      <h3 className="text-lg font-semibold mt-6 mb-2">Existing Categories</h3>
+      <h3 className="text-xl font-semibold text-gray-800 mb-4">
+        Existing Categories
+      </h3>
       {isLoading ? (
-        <p>Loading categories...</p>
+        <p className="text-gray-600">Loading categories...</p>
       ) : (
-        <ul>
+        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {categories.map((category) => (
-            <li key={category._id} className="mb-2 flex items-center">
-              <span className="flex-grow">
-                {category.name} - {category.description}
-              </span>
-              <button
-                onClick={() => openModal("edit", category)}
-                className="text-blue-500 hover:text-blue-600 mr-2"
-              >
-                <Pencil size={16} />
-              </button>
-              <button
-                onClick={() => handleDeleteCategory(category._id)}
-                className="text-red-500 hover:text-red-600"
-              >
-                <Trash2 size={16} />
-              </button>
+            <li
+              key={category._id}
+              className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-4 flex flex-col justify-between"
+            >
+              <div>
+                <h4 className="text-lg font-semibold text-gray-800 mb-2">
+                  {category.name}
+                </h4>
+                <p className="text-gray-600 text-sm">{category.description}</p>
+              </div>
+              <div className="mt-4 flex justify-end gap-2">
+                <button
+                  onClick={() => openModal("edit", category)}
+                  className="text-blue-600 hover:text-blue-700 transition-colors duration-300"
+                >
+                  <Pencil size={18} />
+                </button>
+                <button
+                  onClick={() => handleDeleteCategory(category._id)}
+                  className="text-red-600 hover:text-red-700 transition-colors duration-300"
+                >
+                  <Trash2 size={18} />
+                </button>
+              </div>
             </li>
           ))}
         </ul>

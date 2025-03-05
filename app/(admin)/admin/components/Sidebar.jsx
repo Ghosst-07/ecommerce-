@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { menuItems } from "./menuItems";
+import { signOut } from "next-auth/react";
 
 function Sidebar({ setSelectedTab }) {
   const [openSubmenu, setOpenSubmenu] = useState(null);
@@ -109,6 +110,14 @@ function Sidebar({ setSelectedTab }) {
         <p className="text-sm text-gray-500 mt-1">Manage your workspace</p>
       </div>
       <ul className="mt-4 px-3 space-y-1">{renderMenuItems(menuItems)}</ul>
+      <ul className="mt-10 px-3 space-y-1">
+        <div
+          onClick={signOut}
+          className="p-2 bg-indigo-500 rounded-lg hover:bg-indigo-600 mx-5 text-center text-white"
+        >
+          Log out
+        </div>
+      </ul>
     </div>
   );
 }

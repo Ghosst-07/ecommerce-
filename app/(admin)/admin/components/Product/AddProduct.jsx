@@ -22,6 +22,7 @@ function AddProduct() {
     images: [],
     currentImageUrl: "",
     category: "",
+    slug: "", // Add slug field to initialFormData
   };
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
@@ -78,6 +79,7 @@ function AddProduct() {
     !formData.description &&
       (newErrors.description = "Description is required");
     !formData.category && (newErrors.category = "Category is required");
+    !formData.slug && (newErrors.slug = "Slug is required"); // Validate slug field
 
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
@@ -91,6 +93,8 @@ function AddProduct() {
         });
 
         if (response.ok) {
+          console.log(formData);
+          console.log("Product added successfully");
           setSubmitted(true);
           setFormData(initialFormData);
         } else {
@@ -276,6 +280,26 @@ function AddProduct() {
                   <li>Consistent background.</li>
                   <li>Clear product showcase.</li>
                 </ul>
+              </div>
+
+              {/* Slug Input */}
+              <div className="mb-4 md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Slug
+                </label>
+                <input
+                  type="text"
+                  name="slug"
+                  value={formData.slug}
+                  onChange={handleChange}
+                  placeholder="Enter slug"
+                  className={`mt-1 p-2 border border-gray-300 rounded-md w-full focus:ring-blue-500 focus:border-blue-500 transition duration-200 ${
+                    errors.slug ? "border-red-500" : ""
+                  }`}
+                />
+                {errors.slug && (
+                  <p className="text-xs text-red-500 mt-1">{errors.slug}</p>
+                )}
               </div>
 
               <div className="mt-8 col-span-2 flex justify-center">

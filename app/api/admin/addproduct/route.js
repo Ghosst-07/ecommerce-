@@ -1,9 +1,22 @@
 import connectDB from "@/lib/db";
 import Product from "@/models/product";
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export async function POST(req) {
   try {
+    // Check authentication
+    const session = await getServerSession(authOptions);
+
+    // Only allow admins to create products
+    if (!session || session.user.role !== "admin") {
+      return NextResponse.json(
+        { error: "Unauthorized access" },
+        { status: 401 }
+      );
+    }
+
     await connectDB();
 
     const productData = await req.json();
@@ -19,6 +32,7 @@ export async function POST(req) {
       "description",
       "images",
       "category",
+      "slug", // Ensure slug is required
     ];
 
     const missingFields = requiredFields.filter((field) => !productData[field]);
@@ -26,6 +40,15 @@ export async function POST(req) {
     if (missingFields.length > 0) {
       return NextResponse.json(
         { error: `Missing required fields: ${missingFields.join(", ")}` },
+        { status: 400 }
+      );
+    }
+
+    // Check if a product with the same slug already exists
+    const existingProduct = await Product.findOne({ slug: productData.slug });
+    if (existingProduct) {
+      return NextResponse.json(
+        { error: "A product with this slug already exists" },
         { status: 400 }
       );
     }

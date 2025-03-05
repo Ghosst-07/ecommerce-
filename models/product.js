@@ -36,6 +36,11 @@ const productSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+  slug: {
+    type: String,
+    required: true,
+    unique: true, // Ensure slugs are unique
+  },
   images: [
     {
       type: String, // Store image URLs in an array
