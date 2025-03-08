@@ -3,7 +3,9 @@ import React from "react";
 
 async function fetchProducts() {
   try {
-    const response = await fetch("http://localhost:3000/api/admin/getproduct"); // Replace with your API endpoint
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/admin/getproduct`
+    ); // Replace with your API endpoint
     if (!response.ok) {
       throw new Error("Failed to fetch products");
     }
