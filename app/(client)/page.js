@@ -1,41 +1,28 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+// app/(client)/page.js
+import React from "react";
 
-function LuxuryStorefront() {
-  const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const router = useRouter();
+async function fetchProducts() {
+  try {
+    const response = await fetch("http://localhost:3000/api/admin/getproduct"); // Replace with your API endpoint
+    if (!response.ok) {
+      throw new Error("Failed to fetch products");
+    }
+    const data = await response.json();
 
-  // Fetch products from the API
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch("/api/admin/getproduct");
-        if (!response.ok) {
-          throw new Error("Failed to fetch products");
-        }
-        const data = await response.json();
-        console.log("API Response:", data); // Debugging: Log the API response
+    // Ensure the response has a "products" key and it's an array
+    if (!data || !Array.isArray(data.products)) {
+      throw new Error("API response does not contain a valid products array");
+    }
 
-        // Ensure the response has a "products" key and it's an array
-        if (data && Array.isArray(data.products)) {
-          setProducts(data.products); // Set the products array
-        } else {
-          throw new Error(
-            "API response does not contain a valid products array"
-          );
-        }
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    return data.products;
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return []; // Return an empty array if there's an error
+  }
+}
 
-    fetchProducts();
-  }, []);
+export default async function LuxuryStorefront() {
+  const products = await fetchProducts(); // Fetch products on the server
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -58,25 +45,10 @@ function LuxuryStorefront() {
           Our Collection
         </h2>
 
-        {/* Loading state */}
-        {isLoading && (
-          <div className="flex justify-center items-center h-40">
-            <p className="text-gray-600">Loading products...</p>
-          </div>
-        )}
-
-        {/* Error state */}
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md mb-6 text-center">
-            Error: {error}
-          </div>
-        )}
-
         {/* Display products */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {products.map((product) => (
             <div
-              onClick={() => router.push(`/product/${product.slug}`)}
               key={product._id}
               className="cursor-pointer bg-white rounded-lg shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-105"
             >
@@ -113,7 +85,7 @@ function LuxuryStorefront() {
         </div>
 
         {/* No products found */}
-        {!isLoading && products.length === 0 && (
+        {products.length === 0 && (
           <div className="text-center text-gray-600 mt-6">
             No products found.
           </div>
@@ -130,5 +102,3 @@ function LuxuryStorefront() {
     </div>
   );
 }
-
-export default LuxuryStorefront;
