@@ -97,9 +97,12 @@ function LuxuryStorefront() {
                 <p className="text-gray-600 text-sm mb-4">
                   {product.description}
                 </p>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 mb-2">
                   <span className="font-semibold">Category:</span>{" "}
                   {product.category?.name}
+                </p>
+                <p className="text-lg font-bold text-gray-800 mb-4">
+                  ${product.price}
                 </p>
                 <button className="mt-4 w-full bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-all duration-300">
                   View Details

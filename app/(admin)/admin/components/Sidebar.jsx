@@ -1,12 +1,28 @@
-import React, { useState } from "react";
+"use client"; // Make sure this is a client component
+import React, { useState, useEffect } from "react";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { menuItems } from "./menuItems";
 import { signOut } from "next-auth/react";
 
 function Sidebar({ setSelectedTab }) {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
   const [openSubmenu, setOpenSubmenu] = useState(null);
   const [selected, setSelected] = useState(null);
   const [parentSelected, setParentSelected] = useState(null);
+
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+    if (tab) {
+      setSelected(tab);
+      setSelectedTab(tab);
+    } else {
+      setSelected("home");
+      setSelectedTab("home");
+    }
+  }, [searchParams, setSelectedTab]);
 
   const toggleSubmenu = (label) => {
     setOpenSubmenu((prev) => (prev === label ? null : label));
@@ -21,12 +37,20 @@ function Sidebar({ setSelectedTab }) {
     } else {
       setParentSelected(null);
     }
+
+    const query = new URLSearchParams(searchParams.toString());
+    query.set("tab", tab);
+    router.push(`${pathname}?${query.toString()}`);
   };
 
   const handleParentSelect = (tab) => {
     setSelected(tab);
     setSelectedTab(tab);
     setParentSelected(tab);
+
+    const query = new URLSearchParams(searchParams.toString());
+    query.set("tab", tab);
+    router.push(`${pathname}?${query.toString()}`);
   };
 
   const renderMenuItems = (items) =>

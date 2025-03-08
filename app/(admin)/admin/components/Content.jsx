@@ -34,7 +34,7 @@ const contentMap = {
 function Content({ selectedTab }) {
   const SelectedComponent = contentMap[selectedTab] || DashboardHome;
   return (
-    <div className="flex-grow ml-60 p-6 bg -gray-100">
+    <div className="flex-grow ml-60 p-6 bg-gray-50 w-fit h-screen">
       <SelectedComponent />
     </div>
   );

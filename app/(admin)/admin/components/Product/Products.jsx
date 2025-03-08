@@ -82,34 +82,59 @@ function Products() {
         </div>
       )}
 
-      {/* Display products */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredProducts.map((product) => (
-          <div
-            key={product._id}
-            className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-4"
-          >
-            {/* Display the first image if available */}
-            {product.images && product.images.length > 0 && (
-              <img
-                src={product.images[0]}
-                alt={product.productName}
-                className="w-full h-40 object-cover rounded-md mb-4"
-              />
-            )}
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">
-              {product.productName}
-            </h3>
-            <p className="text-gray-600 text-sm mb-4">{product.description}</p>
-            <p className="text-sm text-gray-600">
-              <span className="font-semibold">Category:</span>{" "}
-              {product.category?.name}
-            </p>
-            <button className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-all duration-300">
-              View Details
-            </button>
-          </div>
-        ))}
+      {/* Display products in a table */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white border border-gray-200">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="py-3 px-4 border-b text-left">Image</th>
+              <th className="py-3 px-4 border-b text-left">Product Name</th>
+              <th className="py-3 px-4 border-b text-left">Slug</th>
+              <th className="py-3 px-4 border-b text-left">Description</th>
+              <th className="py-3 px-4 border-b text-left">Category</th>
+              <th className="py-3 px-4 border-b text-left">Price</th>
+              <th className="py-3 px-4 border-b text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredProducts.map((product) => (
+              <tr
+                key={product._id}
+                className="hover:bg-gray-50 transition-colors"
+              >
+                <td className="py-3 px-4 border-b">
+                  {product.images && product.images.length > 0 && (
+                    <img
+                      src={product.images[0]}
+                      alt={product.productName}
+                      className="w-16 h-16 object-cover rounded-md"
+                    />
+                  )}
+                </td>
+                <td className="py-3 px-4 border-b">{product.productName}</td>
+                <td className="py-3 px-4 border-b">
+                  <p className="px-2 rounded-full bg-indigo-300 w-fit">
+                    {product.slug}
+                  </p>
+                </td>
+                <td className="py-3 px-4 border-b">
+                  {product.description.split(" ").slice(0, 10).join(" ")}
+                  {product.description.split("\n").length > 10 && "..."}
+                </td>
+
+                <td className="py-3 px-4 border-b">{product.category?.name}</td>
+                <td className="py-3 px-4 border-b font-bold">
+                  {product.price}
+                </td>
+                <td className="py-3 px-4 border-b">
+                  <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-all duration-300">
+                    View Details
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {/* No products found */}
